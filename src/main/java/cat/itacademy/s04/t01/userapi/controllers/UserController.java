@@ -14,8 +14,14 @@ public class UserController {
     private static final List<User> users = new CopyOnWriteArrayList<>();
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return users;
+    public List<User> getAllUsers(@RequestParam(required = false) String name) {
+        if (name == null || name.isEmpty()) {
+            return users;
+        }
+
+        return users.stream()
+                .filter(user -> user.getName().toLowerCase().contains(name.toLowerCase()))
+                .toList();
     }
 
     @PostMapping
